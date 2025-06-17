@@ -4,7 +4,7 @@
 
 O objetivo deste projeto é construir um agente capaz de responder a qualquer pergunta sobre as notas fiscais processadas.
 
-** A solução json está no arquivo Solucao.7z cuja senha foi enviada no documento PDF para evitar cópias não autorizadas por outras equipes , após o prazo um novo commit será realizado com o json em claro *
+** A solução json está no arquivo Solucao.7z cuja senha foi enviada no documento PDF para evitar cópias não autorizadas por outras equipes , após o prazo um novo commit será realizado com o json em claro **
 
 ## Motivação
 
