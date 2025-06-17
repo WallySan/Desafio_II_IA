@@ -1,3 +1,22 @@
+
+
+# Grupo ArtificialSapiens - Desafio 2
+
+## Integrantes do Grupo
+
+Nome         | E-mail
+-------------|---------------------
+Lauro A.     | l********@***
+Rodrigo D.   | d********@***
+Ricardo S.   | s********@***
+Luiz M.      | l****@***
+Manuella M.  | m*************@***
+Wilfred B.   | w****************@***
+Roberto F.   | f*******@***
+Marcos L. Z. | m********@***
+
+
+
 # Arquitetura Proposta da Solução
 
 ![image](https://github.com/user-attachments/assets/c48e720d-5b45-438c-a401-f2193993ed71)
