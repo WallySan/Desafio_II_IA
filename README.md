@@ -19,6 +19,10 @@ Marcos L. Z. | m********@***
 
 # Arquitetura Proposta da Solução
 
+## Framework escolhida:
+N8N localmente via Docker + Docker MySQL + Gemini Flash 2.0 para os agentes
+
+
 ![image](https://github.com/user-attachments/assets/c48e720d-5b45-438c-a401-f2193993ed71)
 
 O objetivo deste projeto é construir um agente capaz de responder a qualquer pergunta sobre as notas fiscais processadas.
