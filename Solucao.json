@@ -1,0 +1,848 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "table": {
+          "__rl": true,
+          "value": "notas_fiscais",
+          "mode": "list",
+          "cachedResultName": "notas_fiscais"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        940,
+        -20
+      ],
+      "id": "5afce7c5-eb18-4762-a737-01a06a5a97b5",
+      "name": "MySQL",
+      "credentials": {
+        "mySql": {
+          "id": "cuNLRT8bJZlnWm3I",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Envio de Notas Fiscais",
+        "formDescription": "Enviar notas fiscais compactadas que servirão de contexto para o chat",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Arquivo",
+              "fieldType": "file",
+              "acceptFileTypes": ".zip",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -280,
+        0
+      ],
+      "id": "0e9f2f7f-b0d5-4e03-9f93-0c23ca6f6745",
+      "name": "Ao submeter o Arquivo",
+      "webhookId": "3debdef2-a592-49e3-b38e-decd30cdff37"
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "file_1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        220,
+        -100
+      ],
+      "id": "c0a2f194-af51-4116-bb75-f129950e3b70",
+      "name": "Extrair dados do CSV 1"
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "file_0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        220,
+        120
+      ],
+      "id": "e64fd31a-edc2-4ba6-bcfc-bf6292fcf512",
+      "name": "Extrair dados do CSV 2"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "['CHAVE DE ACESSO']",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        500,
+        -20
+      ],
+      "id": "5a3cb98d-a040-4025-b765-46a7840737d6",
+      "name": "Combinar informações"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "28bba324-e4e7-4dc3-ac2d-9df710c862e3",
+              "name": "CHAVE_ACESSO",
+              "value": "={{ $json['CHAVE DE ACESSO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e6004a1c-277a-4d26-8939-411bb39cf6e3",
+              "name": "MODELO",
+              "value": "={{ $json.MODELO }}",
+              "type": "string"
+            },
+            {
+              "id": "3827fffb-4bd1-4408-9786-1681814f6a48",
+              "name": "SERIE",
+              "value": "={{ $json['SÉRIE'] }}",
+              "type": "string"
+            },
+            {
+              "id": "13e43f9d-d148-4681-b7df-a114a7866d73",
+              "name": "NUMERO",
+              "value": "={{ $json['NÚMERO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "ca1d447d-20ad-472b-b4d8-889b131cda4d",
+              "name": "NATUREZA_OPERACAO",
+              "value": "={{ $json['NATUREZA DA OPERAÇÃO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "b48d8516-bf31-436a-8322-eb59b34aa748",
+              "name": "DATA_EMISSAO",
+              "value": "={{ $json['DATA EMISSÃO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "250ef6a8-95ef-49ca-baef-a147010627cd",
+              "name": "CPFCNPJ_EMITENTE",
+              "value": "={{ $json['CPF/CNPJ Emitente'] }}",
+              "type": "string"
+            },
+            {
+              "id": "a1e480c3-9743-4e77-acf4-65feaa85651e",
+              "name": "RAZAO_SOCIAL_EMITENTE",
+              "value": "={{ $json['RAZÃO SOCIAL EMITENTE'] }}",
+              "type": "string"
+            },
+            {
+              "id": "aec58986-4e2a-4136-9531-2f6862cfa88f",
+              "name": "INSCRICAO_ESTADUAL_EMITENTE",
+              "value": "={{ $json['INSCRIÇÃO ESTADUAL EMITENTE'] }}",
+              "type": "string"
+            },
+            {
+              "id": "7c83cd31-d458-4357-a0cf-2e091c095cc6",
+              "name": "UF_EMITENTE",
+              "value": "={{ $json['UF EMITENTE'] }}",
+              "type": "string"
+            },
+            {
+              "id": "52bb72c3-d893-4525-b9f4-229d87aaa1ec",
+              "name": "MUNICIPIO_EMITENTE",
+              "value": "={{ $json['MUNICÍPIO EMITENTE'] }}",
+              "type": "string"
+            },
+            {
+              "id": "28cc446a-9c65-4619-b04e-989b12efa14f",
+              "name": "CNPJ_DESTINATARIO",
+              "value": "={{ $json['CNPJ DESTINATÁRIO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "868be777-b80d-450e-b72a-1ad3905ba2ee",
+              "name": "NOME_DESTINATARIO",
+              "value": "={{ $json['NOME DESTINATÁRIO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "6bf769ca-654f-4ecd-a0bc-3ef13fa111af",
+              "name": "UF_DESTINATARIO",
+              "value": "={{ $json['UF DESTINATÁRIO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "0333ff79-a239-47bf-b7d0-d2938908081c",
+              "name": "INDICADOR_IE_DESTINATARIO",
+              "value": "={{ $json['INDICADOR IE DESTINATÁRIO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "183e3f04-c74c-41f0-a7ae-41eedc1d9158",
+              "name": "DESTINO_OPERACAO",
+              "value": "={{ $json['DESTINO DA OPERAÇÃO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "4826f6cb-b3ff-4b42-8b74-5f68138707ed",
+              "name": "CONSUMIDOR_FINAL",
+              "value": "={{ $json['CONSUMIDOR FINAL'] }}",
+              "type": "string"
+            },
+            {
+              "id": "c7db8bb2-462c-476d-9a50-584bda33a279",
+              "name": "PRESENCA_COMPRADOR",
+              "value": "={{ $json['PRESENÇA DO COMPRADOR'] }}",
+              "type": "string"
+            },
+            {
+              "id": "c3454965-8712-43c5-ae3d-9fa861ce255e",
+              "name": "NUMERO_PRODUTO",
+              "value": "={{ $json['NÚMERO PRODUTO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "eecf05de-6ed7-4f9d-9e75-1972083abc19",
+              "name": "DESCRICAO_PRODUTO_SERVICO",
+              "value": "={{ $json['DESCRIÇÃO DO PRODUTO/SERVIÇO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "1c2dc3b0-2874-4b44-a82f-88c671ca75b1",
+              "name": "CODIGO_NCM",
+              "value": "={{ $json['CÓDIGO NCM/SH'] }}",
+              "type": "string"
+            },
+            {
+              "id": "ac5280c7-c72c-4b92-af07-06c55ebaebfc",
+              "name": "NCH_SH_TIPO_PRODUTO",
+              "value": "={{ $json['NCM/SH (TIPO DE PRODUTO)'] }}",
+              "type": "string"
+            },
+            {
+              "id": "a7ddf347-2411-4cdd-a8f7-745081f54f4b",
+              "name": "CFOP",
+              "value": "={{ $json.CFOP }}",
+              "type": "string"
+            },
+            {
+              "id": "52a35630-144e-4f04-aa3b-0ece458bec31",
+              "name": "QUANTIDADE",
+              "value": "={{ $json.QUANTIDADE }}",
+              "type": "string"
+            },
+            {
+              "id": "d6c9bd9a-9bc6-4ed8-af6e-450bb9e20157",
+              "name": "UNIDADE",
+              "value": "={{ $json.UNIDADE }}",
+              "type": "string"
+            },
+            {
+              "id": "d536b803-5cfb-4aa1-be04-9a8931436f12",
+              "name": "VALOR_UNITARIO",
+              "value": "={{ $json['VALOR UNITÁRIO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "ef0c0d23-e323-4ee1-a5bc-d51922883a2e",
+              "name": "VALOR_TOTAL",
+              "value": "={{ $json['VALOR TOTAL'] }}",
+              "type": "string"
+            },
+            {
+              "id": "1e620930-4f1f-4c15-9aef-974c715affa5",
+              "name": "EVENTO_MAIS_RECENTE",
+              "value": "={{ $json['EVENTO MAIS RECENTE'] }}",
+              "type": "string"
+            },
+            {
+              "id": "777856af-b584-42f4-b9dc-df56cb90480d",
+              "name": "DATAHORA_EVENTO_MAIS_RECENTE",
+              "value": "={{ $json['DATA/HORA EVENTO MAIS RECENTE'] }}",
+              "type": "string"
+            },
+            {
+              "id": "be5069e5-7f90-48bb-a48f-8ab3c373b944",
+              "name": "VALOR_NOTA_FISCAL",
+              "value": "={{ $json['VALOR NOTA FISCAL'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        -20
+      ],
+      "id": "aa490f80-5f04-4599-b11d-20e6fab3620c",
+      "name": "Normalizar Campos"
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "Arquivo"
+      },
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1.1,
+      "position": [
+        -60,
+        0
+      ],
+      "id": "e2ad52c2-f555-458f-ad8a-eb38dc3eae15",
+      "name": "Descompactar",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "formTitle": "Chat",
+        "formDescription": "Diga sua dúvida",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Mensagem",
+              "placeholder": "Mensagem"
+            }
+          ]
+        },
+        "options": {
+          "customCss": ":root {\n\t--font-family: 'Open Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 12px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 20px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 12px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 28px;\n\t--font-size-html-h2: 20px;\n\t--font-size-html-h3: 16px;\n\t--font-size-html-h4: 14px;\n\t--font-size-html-h5: 12px;\n\t--font-size-html-h6: 10px;\n\t--font-size-subheader: 14px;\n\n\t/* Colors */\n\t--color-background: #fbfcfe;\n\t--color-test-notice-text: #e6a23d;\n\t--color-test-notice-bg: #fefaf6;\n\t--color-test-notice-border: #f6dcb7;\n\t--color-card-bg: #ffffff;\n\t--color-card-border: #dbdfe7;\n\t--color-card-shadow: rgba(99, 77, 255, 0.06);\n\t--color-link: #7e8186;\n\t--color-header: #525356;\n\t--color-label: #555555;\n\t--color-input-border: #dbdfe7;\n\t--color-input-text: #71747A;\n\t--color-focus-border: rgb(90, 76, 194);\n\t--color-submit-btn-bg: #ff6d5a;\n\t--color-submit-btn-text: #ffffff;\n\t--color-error: #ea1f30;\n\t--color-required: #ff6d5a;\n\t--color-clear-button-bg: #7e8186;\n\t--color-html-text: #555;\n\t--color-html-link: #ff6d5a;\n\t--color-header-subtext: #7e8186;\n\n\t/* Border Radii */\n\t--border-radius-card: 8px;\n\t--border-radius-input: 6px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 8px;\n\n\t/* Spacing */\n\t--padding-container-top: 24px;\n\t--padding-card: 24px;\n\t--padding-test-notice-vertical: 12px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 16px;\n\t--padding-form-input: 12px;\n\t--card-padding: 24px;\n\t--card-margin-bottom: 16px;\n\n\t/* Dimensions */\n\t--container-width: 600px;\n\t--submit-btn-height: 48px;\n\t--checkbox-size: 18px;\n\n\t/* Others */\n\t--box-shadow-card: 0px 4px 16px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.5;\n}"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -260,
+        420
+      ],
+      "id": "78f02254-37a0-42d3-adaf-27a7dffd7502",
+      "name": "Questão",
+      "webhookId": "c53c6fb6-c7fa-4814-a3fe-e0fa9b70d5e5"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Mensagem }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Monte uma querie para MySQL que responda esta questão do user. Segue dados sobre a tabela existente de notas fiscais eletrônicas.\n\nColunas:\n| CHAVE_ACESSO                                 | MODELO                                              | SERIE | NUMERO    | NATUREZA_OPERACAO                                            | DATA_EMISSAO        | CPFCNPJ_EMITENTE | RAZAO_SOCIAL_EMITENTE                                        | INSCRICAO_ESTADUAL_EMITENTE | UF_EMITENTE | MUNICIPIO_EMITENTE         | CNPJ_DESTINATARIO | NOME_DESTINATARIO                                            | UF_DESTINATARIO | INDICADOR_IE_DESTINATARIO | DESTINO_OPERACAO           | CONSUMIDOR_FINAL     | PRESENCA_COMPRADOR                           | NUMERO_PRODUTO | DESCRICAO_PRODUTO_SERVICO                                                                                             | CODIGO_NCM | NCH_SH_TIPO_PRODUTO                                                                                                                                                                                                       | CFOP | QUANTIDADE | UNIDADE | VALOR_UNITARIO | VALOR_TOTAL | EVENTO_MAIS_RECENTE | DATAHORA_EVENTO_MAIS_RECENTE | VALOR_NOTA_FISCAL |\n\nExemplo de dados:\n\n| 41240106267630001509550010035101291224888487 | 55 - NF-E EMITIDA EM SUBSTITUI��O AO MODELO 1 OU 1A | 1     | 3510129   | Outras Entradas - Dev Remessa Escola                         | 2024-01-18 07:10:39 | 06267630001509   | COMPANHIA BRASILEIRA DE EDUC. E SIST. DE ENS. S.A - PR OP    | 9085104702                  | PR          | CURITIBA                   | 394429021965      | COMANDO DA AERONAUTICA                                       | PA              | CONTRIBUINTE ISENTO       | 2 - OPERA��O INTERESTADUAL | 1 - CONSUMIDOR FINAL | 9 - OPERA��O N�O PRESENCIAL, OUTROS          |              1 | COLECAO SPE EF1 4ANO VOL 1 AL                                                                                         | 49019900   | Outros livros, brochuras e impressos semelhantes                                                                                                                                                                          | 2949 |       1.00 | UNIDAD  |         522.50 |      522.50 | Autoriza��o de Uso  | 2024-01-18 07:10:58          |            522.50 |\n| 50240129843878000170550010000025251000181553 | 55 - NF-E EMITIDA EM SUBSTITUI��O AO MODELO 1 OU 1A | 1     | 2525      | VENDA DE MERCADORIA FORA DO ESTADO                           | 2024-01-26 11:24:42 | 29843878000170   | V CALDI PEREIRA PECAS E SERVICOS DIESEL                      | 284290777                   | MS          | COXIM                      | 9615848000108     | 4 BATALHAO LOGISTICO                                         | RS              | N�O CONTRIBUINTE          | 2 - OPERA��O INTERESTADUAL | 1 - CONSUMIDOR FINAL | 1 - OPERA��O PRESENCIAL                      |              1 | LANTERNA TATERAL CARRETA LED                                                                                          | 85122021   | Luzes fixas para autom�veis e outros ciclos                                                                                                                                                                               | 6403 |       4.00 | UNIDAD  |          39.90 |      159.60 | Autoriza��o de Uso  | 2024-01-26 11:24:43          |            499.00 |\n| 50240129843878000170550010000025251000181553 | 55 - NF-E EMITIDA EM SUBSTITUI��O AO MODELO 1 OU 1A | 1     | 2525      | VENDA DE MERCADORIA FORA DO ESTADO                           | 2024-01-26 11:24:42 | 29843878000170   | V CALDI PEREIRA PECAS E SERVICOS DIESEL                      | 284290777                   | MS          | COXIM                      | 9615848000108     | 4 BATALHAO LOGISTICO                                         | RS              | N�O CONTRIBUINTE          | 2 - OPERA��O INTERESTADUAL | 1 - CONSUMIDOR FINAL | 1 - OPERA��O PRESENCIAL                      |              2 | CINEMATICO RODO-AR                                                                                                    | 73071920   | Acess�rios moldados para tubos de a�o                                                                                                                                                                                     | 6403 |       4.00 | PE�A    |          75.00 |      300.00 | Autoriza��o de Uso  | 2024-01-26 11:24:43          |            499.00 |\n| 50240129843878000170550010000025251000181553 | 55 - NF-E EMITIDA EM SUBSTITUI��O AO MODELO 1 OU 1A | 1     | 2525      | VENDA DE MERCADORIA FORA DO ESTADO                           | 2024-01-26 11:24:42 | 29843878000170   | V CALDI PEREIRA PECAS E SERVICOS DIESEL                      | 284290777                   | MS          | COXIM                      | 9615848000108     | 4 BATALHAO LOGISTICO                                         | RS              | N�O CONTRIBUINTE          | 2 - OPERA��O INTERESTADUAL | 1 - CONSUMIDOR FINAL | 1 - OPERA��O PRESENCIAL                      |              3 | ESPIRAL NYLON CABINE AMARELO                                                                                          | 39173100   | Tubos flex�veis podendo suportar uma press�o m�nima de 27,6 Mpa, de pl�stico                                                                                                                                              | 6403 |       1.00 | PE�A    |          39.90 |       39.90 | Autoriza��o de Uso  | 2024-01-26 11:24:43          |            499.00 |\n|\n\nNão há coluna com chave primária, o header e itens de notas fiscais foram mantidos em uma unica tabela via combine por chave eletronica, o nome da tabela é notas_fiscais.\n\nEm sua resposta, evite explicações ou textos além do código SQL puro, pois tudo que disser irá diretamente para o banco de dados, colocar ; no final.\n\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -20,
+        620
+      ],
+      "id": "8b13bafc-420a-415c-a6b1-61b43a95032f",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        880
+      ],
+      "id": "baab7d8e-16c4-4752-a79f-47ea5d296f25",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "MDD41fKYyQUNiCP5",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import re\n\ndef extract_and_validate_sql(llm_response):\n    # Extrair SQL entre ```sql ... ```\n    match = re.search(r\"```sql\\s+([\\s\\S]*?)\\s+```\", llm_response, re.IGNORECASE)\n    if not match:\n        raise ValueError(\"Nenhum bloco SQL válido encontrado entre ```sql ... ```.\")\n\n    sql = match.group(1).strip()\n\n    # Verificar se começa com SELECT\n    if not sql.upper().startswith(\"SELECT\"):\n        raise ValueError(\"Somente comandos SELECT são permitidos.\")\n\n    # Não permitir JOIN ou UNION\n    forbidden_keywords = [\"JOIN\", \"UNION\"]\n    for keyword in forbidden_keywords:\n        if re.search(rf\"\\b{keyword}\\b\", sql, re.IGNORECASE):\n            raise ValueError(f\"Uso de '{keyword}' não permitido na query.\")\n\n    # Verificar se só consulta a tabela 'notas_fiscais'\n    table_names = re.findall(r\"\\bFROM\\s+([a-zA-Z0-9_]+)\", sql, re.IGNORECASE)\n    for table in table_names:\n        if table.lower() != \"notas_fiscais\":\n            raise ValueError(f\"Somente a tabela 'notas_fiscais' pode ser consultada. Encontrado: '{table}'\")\n\n    return sql\n\n# === Loop sobre os itens recebidos (n8n ===)\noutput = []\n\nfor item in items:\n    try:\n        text = item['json']['text']\n        clean_sql = extract_and_validate_sql(text)\n        output.append({\"json\": {\"clean_sql\": clean_sql}})\n    except Exception as e:\n        output.append({\"json\": {\"error\": str(e)}})\n\nreturn output\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        360,
+        620
+      ],
+      "id": "78a8644b-2049-4249-8246-82d83ce5774a",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.clean_sql }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        360,
+        860
+      ],
+      "id": "e2f71e77-7077-4d7d-aee5-adfe66dbc8a6",
+      "name": "MySQL1",
+      "credentials": {
+        "mySql": {
+          "id": "cuNLRT8bJZlnWm3I",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=INSTRUÇÕES:\nO prompt do usuário foi enviado para um agente SQL que montou um comando de consulta na base e obteve uma resposta.\n\nDados:\nPrompt do usuário: {{ $json.prompt }}\n\nComando montado pelo Agente SQL {{ $json.agente_sql }}\n\nResposta do banco de dados:\n{{ $json.resposta_agente_sql }}\n\nVerifique se a consulta foi realizada exclusivamente na tabela notas_fiscais qualquer inner join ou union ou menção a tabela diferente na query de SQL não é permitida e informar que violou regras de segurança.\n\nCaso a resposta não viole regras de segurança, montar para ele um texto respondendo a pergunta de seu prompt inicial, mas usando este contexto que o agente SQL e o banco de dados deu como resposta. \n\nNão falar nada de código pois as instruções acioma são de uso interno\n\nPergunta a ser respondida do usuário:\n{{ $json.prompt }}\n\n\n",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1220,
+        620
+      ],
+      "id": "db61769f-ebfa-44e6-8bb5-774500cea5e8",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        880
+      ],
+      "id": "a4a809d0-8115-46ed-b35e-17fec2b8501a",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "MDD41fKYyQUNiCP5",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ffee1a9e-0909-46f4-a580-87df3755e088",
+              "name": "Prompt do usuário",
+              "value": "={{ $json.Mensagem }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        600,
+        420
+      ],
+      "id": "0bdc5963-7598-4a5d-9782-cc877d44d18d",
+      "name": "Prompt Usuario"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5e6e3a1c-3429-4d64-bcc3-70c5ef8921a7",
+              "name": "Código SQL enviado com base no prompt do usuario",
+              "value": "={{ $json.clean_sql }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        580,
+        620
+      ],
+      "id": "9409b03b-62ad-4ee1-8d35-4f077aa59fde",
+      "name": "SQL Montado pelo Agente"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e68745bb-f2af-4eca-8c79-a77be70330d0",
+              "name": "retornos",
+              "value": "={{ $json.retornos }}",
+              "type": "array"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        680,
+        860
+      ],
+      "id": "2dfa5e36-6a5a-47b7-b146-3439397c5a00",
+      "name": "Retorno do banco de dados"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "retornos",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        520,
+        860
+      ],
+      "id": "04a6a739-9b45-4068-8b6a-e0fd8b054221",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "numberInputs": 3,
+        "query": "SELECT * FROM input1, input2, input3",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        880,
+        620
+      ],
+      "id": "d4f192b2-e77d-4123-bf0b-ef7f4c68546d",
+      "name": "Juntando informações assincronas",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nlet prompt = '';\nlet agente_sql = '';\nlet resposta_agente_sql = '';\n\nfor (const item of items) {\n  const data = item.json;\n\n  if (data['Prompt do usuário']) {\n    prompt = data['Prompt do usuário'];\n  }\n\n  if (data['Código SQL enviado com base no prompt do usuario']) {\n    agente_sql = data['Código SQL enviado com base no prompt do usuario'];\n  }\n\n  if (data['retornos'] && Array.isArray(data['retornos'])) {\n    const linhas = data['retornos'].map(ret => {\n      const colunas = Object.entries(ret).map(([chave, valor]) => `${chave}: ${valor}`);\n      return `- ${colunas.join(' | ')}`;\n    });\n\n    resposta_agente_sql = linhas.join('\\n');\n  }\n}\n\nreturn [{\n  json: {\n    prompt,\n    agente_sql,\n    resposta_agente_sql\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1060,
+        620
+      ],
+      "id": "ac6a5bd3-f777-4572-9d96-c79933a1aeb6",
+      "name": "Prompt + Contexto"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "Resposta",
+        "completionMessage": "={{ $json.text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        620
+      ],
+      "id": "c09b6f27-394e-4c3f-b72d-cfe0d958157c",
+      "name": "Retorno do Form",
+      "webhookId": "1f5a736c-22cf-4246-80ef-3636aea7e260"
+    },
+    {
+      "parameters": {
+        "content": "## Importação de Dados \nEntra com arquivo.zip faz todo o tratamento de dados até a inserção no banco de dados",
+        "height": 120,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -200
+      ],
+      "id": "12a4f24a-4848-4780-924c-adfd8bf2af98",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Agente de notas fiscais \nAgente acessa banco de dados e prepara contexto para prompt final",
+        "height": 100,
+        "width": 420
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        300
+      ],
+      "id": "bf8491fa-bbad-4123-9545-d321f1f03261",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Ao submeter o Arquivo": {
+      "main": [
+        [
+          {
+            "node": "Descompactar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrair dados do CSV 1": {
+      "main": [
+        [
+          {
+            "node": "Combinar informações",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrair dados do CSV 2": {
+      "main": [
+        [
+          {
+            "node": "Combinar informações",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Combinar informações": {
+      "main": [
+        [
+          {
+            "node": "Normalizar Campos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar Campos": {
+      "main": [
+        [
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descompactar": {
+      "main": [
+        [
+          {
+            "node": "Extrair dados do CSV 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extrair dados do CSV 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Questão": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prompt Usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "MySQL1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "SQL Montado pelo Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SQL Montado pelo Agente": {
+      "main": [
+        [
+          {
+            "node": "Juntando informações assincronas",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Prompt Usuario": {
+      "main": [
+        [
+          {
+            "node": "Juntando informações assincronas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retorno do banco de dados": {
+      "main": [
+        [
+          {
+            "node": "Juntando informações assincronas",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Retorno do Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Retorno do banco de dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Juntando informações assincronas": {
+      "main": [
+        [
+          {
+            "node": "Prompt + Contexto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prompt + Contexto": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "270d2732-c336-4d69-8468-12fd9d41b61a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ce3fa3cca6f397c9dd116d4a7454715d67c06f843275445aa72d49b10ee2ddce"
+  },
+  "id": "8WZnDt8XCxd8J2ko",
+  "tags": []
+}
